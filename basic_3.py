@@ -1,5 +1,4 @@
 import sys
-import numpy as np
 
 # arg1 = sys.argv[1]
 # arg2 = sys.argv[2]
@@ -21,7 +20,7 @@ class Seq_ali_basic:
         self.x_alignment = ""
         self.y_alignment = ""
         self.alignment_cost = 0
-        self.alignment_cost_arr = np.full((len(self.x) + 1, len(self.y) + 1), -1)
+        self.alignment_cost_arr = [[-1] * (len(self.x) + 1)] * (len(self.y) + 1)
         for i in range(len(self.x) + 1):
             self.alignment_cost_arr[i][0] = self.delta * i
         for j in range(len(self.y) + 1):
