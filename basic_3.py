@@ -20,8 +20,11 @@ class Seq_ali_basic:
         self.x_alignment = ""
         self.y_alignment = ""
         self.alignment_cost = 0
-        self.alignment_cost_arr = [[-1 for i in range(len(self.x) + 1)] for j in range(len(self.y) + 1)]
+        self.alignment_cost_arr = [[-1 for i in range(len(self.y) + 1)] for j in range(len(self.x) + 1)]
+        print(f"self.alignment_cost_arr: {self.alignment_cost_arr}")
         for i in range(len(self.x) + 1):
+            print(f"i: {i}")
+            print(f"self.alignment_cost_arr[i][0]: {self.alignment_cost_arr[i][0] }")
             self.alignment_cost_arr[i][0] = self.delta * i
         for j in range(len(self.y) + 1):
             self.alignment_cost_arr[0][j] = self.delta * j
@@ -87,8 +90,8 @@ class Seq_ali_basic:
                 break
 
 if __name__ == "__main__":
-    x = "CC"
-    y = "GG"
+    x = "AA"
+    y = "C"
 
     print(f"====================================================================")
     basic = Seq_ali_basic(x, y)
