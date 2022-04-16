@@ -83,20 +83,20 @@ class Seq_ali_basic:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
                 self.x_alignment = "_" + self.x_alignment
-                y = self.y[index_y - 1: index_y]
+                y = self.y[index_y - 1]
                 self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
-                x = self.x[index_x - 1: index_x]
+                x = self.x[index_x - 1]
                 self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
             alignment_cost = self.alignment_cost_arr[index_x][index_y]
-            x = self.x[index_x - 1: index_x]
-            y = self.y[index_y - 1: index_y]
+            x = self.x[index_x - 1]
+            y = self.y[index_y - 1]
             alpha = self.alpha_value_dict[(x, y)]
 
             if alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
@@ -125,20 +125,20 @@ class Seq_ali_basic:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
                 self.x_alignment = "_" + self.x_alignment
-                y = self.y[index_y - 1: index_y]
+                y = self.y[index_y - 1]
                 self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
-                x = self.x[index_x - 1: index_x]
+                x = self.x[index_x - 1]
                 self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
             alignment_cost = self.alignment_cost_arr[index_x][index_y]
-            x = self.x[index_x - 1: index_x]
-            y = self.y[index_y - 1: index_y]
+            x = self.x[index_x - 1]
+            y = self.y[index_y - 1]
             alpha = self.alpha_value_dict[(x, y)]
 
             if alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
@@ -167,20 +167,20 @@ class Seq_ali_basic:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
                 self.x_alignment = "_" + self.x_alignment
-                y = self.y[index_y - 1: index_y]
+                y = self.y[index_y - 1]
                 self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
-                x = self.x[index_x - 1: index_x]
+                x = self.x[index_x - 1]
                 self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
             alignment_cost = self.alignment_cost_arr[index_x][index_y]
-            x = self.x[index_x - 1: index_x]
-            y = self.y[index_y - 1: index_y]
+            x = self.x[index_x - 1]
+            y = self.y[index_y - 1]
             alpha = self.alpha_value_dict[(x, y)]
 
             if alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
@@ -209,20 +209,20 @@ class Seq_ali_basic:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
                 self.x_alignment = "_" + self.x_alignment
-                y = self.y[index_y - 1: index_y]
+                y = self.y[index_y - 1]
                 self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
-                x = self.x[index_x - 1: index_x]
+                x = self.x[index_x - 1]
                 self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
             alignment_cost = self.alignment_cost_arr[index_x][index_y]
-            x = self.x[index_x - 1: index_x]
-            y = self.y[index_y - 1: index_y]
+            x = self.x[index_x - 1]
+            y = self.y[index_y - 1]
             alpha = self.alpha_value_dict[(x, y)]
 
             if alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
@@ -251,20 +251,20 @@ class Seq_ali_basic:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
                 self.x_alignment = "_" + self.x_alignment
-                y = self.y[index_y - 1: index_y]
+                y = self.y[index_y - 1]
                 self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
-                x = self.x[index_x - 1: index_x]
+                x = self.x[index_x - 1]
                 self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
             alignment_cost = self.alignment_cost_arr[index_x][index_y]
-            x = self.x[index_x - 1: index_x]
-            y = self.y[index_y - 1: index_y]
+            x = self.x[index_x - 1]
+            y = self.y[index_y - 1]
             alpha = self.alpha_value_dict[(x, y)]
 
             if alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
@@ -293,20 +293,20 @@ class Seq_ali_basic:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
                 self.x_alignment = "_" + self.x_alignment
-                y = self.y[index_y - 1: index_y]
+                y = self.y[index_y - 1]
                 self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
-                x = self.x[index_x - 1: index_x]
+                x = self.x[index_x - 1]
                 self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
             alignment_cost = self.alignment_cost_arr[index_x][index_y]
-            x = self.x[index_x - 1: index_x]
-            y = self.y[index_y - 1: index_y]
+            x = self.x[index_x - 1]
+            y = self.y[index_y - 1]
             alpha = self.alpha_value_dict[(x, y)]
 
             if alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
