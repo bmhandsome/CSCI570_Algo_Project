@@ -5,8 +5,7 @@ import sys
 
 # INPUT_FILE_PATH = arg1
 # OUTPUT_FILE_PATH = arg2
-f = open("../datapoints/in3.txt", "r")
-
+f = open("../SampleTestCases/input4.txt", "r")
 raw1 = []
 raw2 = []
 i = 0
@@ -24,15 +23,12 @@ for x in f:
     else:
         raw2.append(int(x.strip()))
 
-
 def CookingRaw(raw):
     meal = raw[0]
-    for i in range(1, len(meal) + 1):
+    for i in range(1, len(raw)):
         meal = meal[:raw[i] + 1] + meal + meal[raw[i] + 1:]
 
     return meal
-
-
 
 class Seq_ali_basic: 
     def __init__(self, X, Y):
@@ -78,7 +74,7 @@ class Seq_ali_basic:
                     (self.delta + self.alignment_cost_arr[i][j - 1])
                 )
 
-    def find_alignment(self): 
+    def find_alignment_1(self): 
         index_x = len(self.x)
         index_y = len(self.y)
 
@@ -86,11 +82,15 @@ class Seq_ali_basic:
         while True:
             if index_x == 0 and index_y == 0: break
             if index_x == 0: 
-                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = "_" + self.x_alignment
+                y = self.y[index_y - 1: index_y]
+                self.y_alignment = y + self.y_alignment
                 index_y = index_y - 1
                 continue
             if index_y == 0:
-                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = "_" + self.y_alignment
+                x = self.x[index_x - 1: index_x]
+                self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
                 continue
 
@@ -105,38 +105,295 @@ class Seq_ali_basic:
                 index_x = index_x - 1
                 index_y = index_y - 1
             elif alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
-                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = x + self.x_alignment
                 index_x = index_x - 1
             elif alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
+                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+            else: 
+                print("Error")
+                break
+
+    def find_alignment_2(self): 
+        index_x = len(self.x)
+        index_y = len(self.y)
+
+        self.alignment_cost = self.alignment_cost_arr[index_x][index_y]
+        while True:
+            if index_x == 0 and index_y == 0: break
+            if index_x == 0: 
+                self.x_alignment = "_" + self.x_alignment
+                y = self.y[index_y - 1: index_y]
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+                continue
+            if index_y == 0:
                 self.y_alignment = "_" + self.y_alignment
+                x = self.x[index_x - 1: index_x]
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+                continue
+
+            alignment_cost = self.alignment_cost_arr[index_x][index_y]
+            x = self.x[index_x - 1: index_x]
+            y = self.y[index_y - 1: index_y]
+            alpha = self.alpha_value_dict[(x, y)]
+
+            if alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
+                self.x_alignment = x + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_x = index_x - 1
+                index_y = index_y - 1
+            elif alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
+                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+            elif alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
+                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+            else: 
+                print("Error")
+                break
+
+    def find_alignment_3(self): 
+        index_x = len(self.x)
+        index_y = len(self.y)
+
+        self.alignment_cost = self.alignment_cost_arr[index_x][index_y]
+        while True:
+            if index_x == 0 and index_y == 0: break
+            if index_x == 0: 
+                self.x_alignment = "_" + self.x_alignment
+                y = self.y[index_y - 1: index_y]
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+                continue
+            if index_y == 0:
+                self.y_alignment = "_" + self.y_alignment
+                x = self.x[index_x - 1: index_x]
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+                continue
+
+            alignment_cost = self.alignment_cost_arr[index_x][index_y]
+            x = self.x[index_x - 1: index_x]
+            y = self.y[index_y - 1: index_y]
+            alpha = self.alpha_value_dict[(x, y)]
+
+            if alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
+                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+            elif alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
+                self.x_alignment = x + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_x = index_x - 1
+                index_y = index_y - 1
+            elif alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
+                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+            else: 
+                print("Error")
+                break
+
+    def find_alignment_4(self): 
+        index_x = len(self.x)
+        index_y = len(self.y)
+
+        self.alignment_cost = self.alignment_cost_arr[index_x][index_y]
+        while True:
+            if index_x == 0 and index_y == 0: break
+            if index_x == 0: 
+                self.x_alignment = "_" + self.x_alignment
+                y = self.y[index_y - 1: index_y]
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+                continue
+            if index_y == 0:
+                self.y_alignment = "_" + self.y_alignment
+                x = self.x[index_x - 1: index_x]
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+                continue
+
+            alignment_cost = self.alignment_cost_arr[index_x][index_y]
+            x = self.x[index_x - 1: index_x]
+            y = self.y[index_y - 1: index_y]
+            alpha = self.alpha_value_dict[(x, y)]
+
+            if alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
+                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+            elif alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
+                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+            elif alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
+                self.x_alignment = x + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_x = index_x - 1
+                index_y = index_y - 1
+            else: 
+                print("Error")
+                break
+
+    def find_alignment_5(self): 
+        index_x = len(self.x)
+        index_y = len(self.y)
+
+        self.alignment_cost = self.alignment_cost_arr[index_x][index_y]
+        while True:
+            if index_x == 0 and index_y == 0: break
+            if index_x == 0: 
+                self.x_alignment = "_" + self.x_alignment
+                y = self.y[index_y - 1: index_y]
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+                continue
+            if index_y == 0:
+                self.y_alignment = "_" + self.y_alignment
+                x = self.x[index_x - 1: index_x]
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+                continue
+
+            alignment_cost = self.alignment_cost_arr[index_x][index_y]
+            x = self.x[index_x - 1: index_x]
+            y = self.y[index_y - 1: index_y]
+            alpha = self.alpha_value_dict[(x, y)]
+
+            if alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
+                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+            elif alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
+                self.x_alignment = x + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_x = index_x - 1
+                index_y = index_y - 1
+            elif alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
+                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+            else: 
+                print("Error")
+                break
+
+    def find_alignment_6(self): 
+        index_x = len(self.x)
+        index_y = len(self.y)
+
+        self.alignment_cost = self.alignment_cost_arr[index_x][index_y]
+        while True:
+            if index_x == 0 and index_y == 0: break
+            if index_x == 0: 
+                self.x_alignment = "_" + self.x_alignment
+                y = self.y[index_y - 1: index_y]
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+                continue
+            if index_y == 0:
+                self.y_alignment = "_" + self.y_alignment
+                x = self.x[index_x - 1: index_x]
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+                continue
+
+            alignment_cost = self.alignment_cost_arr[index_x][index_y]
+            x = self.x[index_x - 1: index_x]
+            y = self.y[index_y - 1: index_y]
+            alpha = self.alpha_value_dict[(x, y)]
+
+            if alignment_cost == self.delta + self.alignment_cost_arr[index_x][index_y - 1]:
+                self.x_alignment = "_" + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_y = index_y - 1
+            elif alignment_cost == self.delta + self.alignment_cost_arr[index_x - 1][index_y]:
+                self.y_alignment = "_" + self.y_alignment
+                self.x_alignment = x + self.x_alignment
+                index_x = index_x - 1
+            elif alignment_cost == alpha + self.alignment_cost_arr[index_x - 1][index_y - 1]:
+                self.x_alignment = x + self.x_alignment
+                self.y_alignment = y + self.y_alignment
+                index_x = index_x - 1
                 index_y = index_y - 1
             else: 
                 print("Error")
                 break
 
 
-
 if __name__ == "__main__":
-    #x = "AA"
     x = CookingRaw(raw1)
     y = CookingRaw(raw2)
-    #y = "C"
+    # x = "A"
+    # y = "C"
 
     print(f"====================================================================")
-    basic = Seq_ali_basic(x, y)
-    print(f"1_alignment_cost_arr_before: {basic.alignment_cost_arr}")
-    basic.calculate_alignment_cost_recursive(x, y)
-    print(f"1_alignment_cost_arr_after: {basic.alignment_cost_arr}")
-    basic.find_alignment()
-    print(f"alignment_cost: {basic.alignment_cost}")
-    print(f"alignment_x: {basic.x_alignment}")
-    print(f"alignment_y: {basic.y_alignment}")
+    # basic = Seq_ali_basic(x, y)
+    # #print(f"1_alignment_cost_arr_before: {basic.alignment_cost_arr}")
+    # basic.calculate_alignment_cost_recursive(x, y)
+    # #print(f"1_alignment_cost_arr_after: {basic.alignment_cost_arr}")
+    # basic.find_alignment_1()
+    # print(f"alignment_cost: {basic.alignment_cost}")
+    # print(f"alignment_x: {basic.x_alignment}")
+    # print(f"alignment_y: {basic.y_alignment}")
     print(f"=======================================================")
-    basic2 = Seq_ali_basic(x, y)
-    print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic2.calculate_alignment_cost_loop(x, y)
-    print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic2.find_alignment()
-    print(f"alignment_cost: {basic2.alignment_cost}")
-    print(f"alignment_x: {basic2.x_alignment}")
-    print(f"alignment_y: {basic2.y_alignment}")
+    basic_loop_1 = Seq_ali_basic(x, y)
+    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    basic_loop_1.calculate_alignment_cost_loop(x, y)
+    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    basic_loop_1.find_alignment_1()
+    print(f"alignment_cost: {basic_loop_1.alignment_cost}")
+    print(f"alignment_x: {basic_loop_1.x_alignment}")
+    print(f"alignment_y: {basic_loop_1.y_alignment}")
+    print(f"=======================================================")
+    basic_loop_2 = Seq_ali_basic(x, y)
+    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    basic_loop_2.calculate_alignment_cost_loop(x, y)
+    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    basic_loop_2.find_alignment_2()
+    print(f"alignment_cost: {basic_loop_2.alignment_cost}")
+    print(f"alignment_x: {basic_loop_2.x_alignment}")
+    print(f"alignment_y: {basic_loop_2.y_alignment}")    
+    print(f"=======================================================")
+    basic_loop_3 = Seq_ali_basic(x, y)
+    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    basic_loop_3.calculate_alignment_cost_loop(x, y)
+    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    basic_loop_3.find_alignment_3()
+    print(f"alignment_cost: {basic_loop_3.alignment_cost}")
+    print(f"alignment_x: {basic_loop_3.x_alignment}")
+    print(f"alignment_y: {basic_loop_3.y_alignment}")    
+    print(f"=======================================================")
+    basic_loop_4 = Seq_ali_basic(x, y)
+    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    basic_loop_4.calculate_alignment_cost_loop(x, y)
+    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    basic_loop_4.find_alignment_4()
+    print(f"alignment_cost: {basic_loop_4.alignment_cost}")
+    print(f"alignment_x: {basic_loop_4.x_alignment}")
+    print(f"alignment_y: {basic_loop_4.y_alignment}")    
+    print(f"=======================================================")
+    basic_loop_5 = Seq_ali_basic(x, y)
+    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    basic_loop_5.calculate_alignment_cost_loop(x, y)
+    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    basic_loop_5.find_alignment_5()
+    print(f"alignment_cost: {basic_loop_5.alignment_cost}")
+    print(f"alignment_x: {basic_loop_5.x_alignment}")
+    print(f"alignment_y: {basic_loop_5.y_alignment}")    
+    print(f"=======================================================")
+    basic_loop_6 = Seq_ali_basic(x, y)
+    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    basic_loop_6.calculate_alignment_cost_loop(x, y)
+    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    basic_loop_6.find_alignment_6()
+    print(f"alignment_cost: {basic_loop_6.alignment_cost}")
+    print(f"alignment_x: {basic_loop_6.x_alignment}")
+    print(f"alignment_y: {basic_loop_6.y_alignment}")
+    print(f"=======================================================")
