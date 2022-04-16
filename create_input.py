@@ -1,4 +1,4 @@
-f = open("../datapoints/in3.txt", "r")
+f = open("../SampleTestCases/input_me.txt", "r")
 
 raw1 = []
 raw2 = []
@@ -20,10 +20,13 @@ for x in f:
 
 def CookingRaw(raw):
     meal = raw[0]
-    for i in range(1, len(meal) + 1):
+    for i in range(1, len(raw)):
         meal = meal[:raw[i] + 1] + meal + meal[raw[i] + 1:]
 
     return meal
 
 cooked1 = CookingRaw(raw1)
 cooked2 = CookingRaw(raw2)
+print(f"cooked1: {cooked1}")
+print(f"cooked2: {cooked2}")
+
