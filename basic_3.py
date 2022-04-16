@@ -5,6 +5,34 @@ import sys
 
 # INPUT_FILE_PATH = arg1
 # OUTPUT_FILE_PATH = arg2
+f = open("../datapoints/in3.txt", "r")
+
+raw1 = []
+raw2 = []
+i = 0
+
+for x in f:
+    if i==0:
+        raw1.append(x.strip())
+        i+=1
+    elif i==1:
+        try:
+            raw1.append(int(x.strip()))
+        except:
+            raw2.append(x.strip())
+            i+=1
+    else:
+        raw2.append(int(x.strip()))
+
+
+def CookingRaw(raw):
+    meal = raw[0]
+    for i in range(1, len(meal) + 1):
+        meal = meal[:raw[i] + 1] + meal + meal[raw[i] + 1:]
+
+    return meal
+
+
 
 class Seq_ali_basic: 
     def __init__(self, X, Y):
@@ -21,10 +49,7 @@ class Seq_ali_basic:
         self.y_alignment = ""
         self.alignment_cost = 0
         self.alignment_cost_arr = [[-1 for i in range(len(self.y) + 1)] for j in range(len(self.x) + 1)]
-        print(f"self.alignment_cost_arr: {self.alignment_cost_arr}")
         for i in range(len(self.x) + 1):
-            print(f"i: {i}")
-            print(f"self.alignment_cost_arr[i][0]: {self.alignment_cost_arr[i][0] }")
             self.alignment_cost_arr[i][0] = self.delta * i
         for j in range(len(self.y) + 1):
             self.alignment_cost_arr[0][j] = self.delta * j
@@ -89,9 +114,13 @@ class Seq_ali_basic:
                 print("Error")
                 break
 
+
+
 if __name__ == "__main__":
-    x = "AA"
-    y = "C"
+    #x = "AA"
+    x = CookingRaw(raw1)
+    y = CookingRaw(raw2)
+    #y = "C"
 
     print(f"====================================================================")
     basic = Seq_ali_basic(x, y)
