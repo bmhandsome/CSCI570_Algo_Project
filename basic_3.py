@@ -1,11 +1,16 @@
 import sys
+from resource import *
+import time
+import psutil
 
-# arg1 = sys.argv[1]
-# arg2 = sys.argv[2]
+arg1 = sys.argv[1]
+arg2 = sys.argv[2]
 
-# INPUT_FILE_PATH = arg1
-# OUTPUT_FILE_PATH = arg2
-f = open("../SampleTestCases/input4.txt", "r")
+INPUT_FILE_PATH = arg1
+OUTPUT_FILE_PATH = arg2
+#f = open("../SampleTestCases/input4.txt", "r")
+f = open(INPUT_FILE_PATH, "r")
+
 raw1 = []
 raw2 = []
 i = 0
@@ -29,6 +34,25 @@ def CookingRaw(raw):
         meal = meal[:raw[i] + 1] + meal + meal[raw[i] + 1:]
 
     return meal
+
+def process_memory():
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    memory_consumed = int(memory_info.rss/1024)
+    return memory_consumed
+
+def time_wrapper(x, y):
+    start_time = time.time()
+    basic = call_algorithm(x, y)
+    end_time = time.time()
+    time_taken = (end_time - start_time)*1000
+    return time_taken, basic
+
+def call_algorithm(x, y):
+    basic_loop_1 = Seq_ali_basic(x, y)
+    basic_loop_1.calculate_alignment_cost_loop(x, y)
+    basic_loop_1.find_alignment_1()
+    return basic_loop_1
 
 class Seq_ali_basic: 
     def __init__(self, X, Y):
@@ -333,67 +357,67 @@ if __name__ == "__main__":
     # x = "A"
     # y = "C"
 
-    print(f"====================================================================")
-    # basic = Seq_ali_basic(x, y)
-    # #print(f"1_alignment_cost_arr_before: {basic.alignment_cost_arr}")
-    # basic.calculate_alignment_cost_recursive(x, y)
-    # #print(f"1_alignment_cost_arr_after: {basic.alignment_cost_arr}")
-    # basic.find_alignment_1()
-    # print(f"alignment_cost: {basic.alignment_cost}")
-    # print(f"alignment_x: {basic.x_alignment}")
-    # print(f"alignment_y: {basic.y_alignment}")
-    print(f"=======================================================")
-    basic_loop_1 = Seq_ali_basic(x, y)
-    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic_loop_1.calculate_alignment_cost_loop(x, y)
-    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic_loop_1.find_alignment_1()
-    print(f"alignment_cost: {basic_loop_1.alignment_cost}")
-    print(f"alignment_x: {basic_loop_1.x_alignment}")
-    print(f"alignment_y: {basic_loop_1.y_alignment}")
-    print(f"=======================================================")
-    basic_loop_2 = Seq_ali_basic(x, y)
-    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic_loop_2.calculate_alignment_cost_loop(x, y)
-    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic_loop_2.find_alignment_2()
-    print(f"alignment_cost: {basic_loop_2.alignment_cost}")
-    print(f"alignment_x: {basic_loop_2.x_alignment}")
-    print(f"alignment_y: {basic_loop_2.y_alignment}")    
-    print(f"=======================================================")
-    basic_loop_3 = Seq_ali_basic(x, y)
-    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic_loop_3.calculate_alignment_cost_loop(x, y)
-    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic_loop_3.find_alignment_3()
-    print(f"alignment_cost: {basic_loop_3.alignment_cost}")
-    print(f"alignment_x: {basic_loop_3.x_alignment}")
-    print(f"alignment_y: {basic_loop_3.y_alignment}")    
-    print(f"=======================================================")
-    basic_loop_4 = Seq_ali_basic(x, y)
-    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic_loop_4.calculate_alignment_cost_loop(x, y)
-    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic_loop_4.find_alignment_4()
-    print(f"alignment_cost: {basic_loop_4.alignment_cost}")
-    print(f"alignment_x: {basic_loop_4.x_alignment}")
-    print(f"alignment_y: {basic_loop_4.y_alignment}")    
-    print(f"=======================================================")
-    basic_loop_5 = Seq_ali_basic(x, y)
-    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic_loop_5.calculate_alignment_cost_loop(x, y)
-    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic_loop_5.find_alignment_5()
-    print(f"alignment_cost: {basic_loop_5.alignment_cost}")
-    print(f"alignment_x: {basic_loop_5.x_alignment}")
-    print(f"alignment_y: {basic_loop_5.y_alignment}")    
-    print(f"=======================================================")
-    basic_loop_6 = Seq_ali_basic(x, y)
-    #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
-    basic_loop_6.calculate_alignment_cost_loop(x, y)
-    #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
-    basic_loop_6.find_alignment_6()
-    print(f"alignment_cost: {basic_loop_6.alignment_cost}")
-    print(f"alignment_x: {basic_loop_6.x_alignment}")
-    print(f"alignment_y: {basic_loop_6.y_alignment}")
-    print(f"=======================================================")
+    time_taken, basic = time_wrapper(x, y)
+    memory = process_memory()
+    with open(OUTPUT_FILE_PATH, "wt") as f:
+        f.write(f"{basic.alignment_cost}\n")
+        f.write(f"{basic.x_alignment}\n")
+        f.write(f"{basic.y_alignment}\n")
+        f.write(f"{time_taken}\n")
+        f.write(f"{memory}")
+
+    # print(f"process_memory: {process_memory()}")
+    # basic_loop_1 = Seq_ali_basic(x, y)
+    # basic_loop_1.calculate_alignment_cost_loop(x, y)
+    # basic_loop_1.find_alignment_1()
+    
+
+    # print(f"alignment_cost: {basic_loop_1.alignment_cost}")
+    # print(f"alignment_x: {basic_loop_1.x_alignment}")
+    # print(f"alignment_y: {basic_loop_1.y_alignment}")
+    # print(f"=======================================================")
+    # basic_loop_2 = Seq_ali_basic(x, y)
+    # #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    # basic_loop_2.calculate_alignment_cost_loop(x, y)
+    # #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    # basic_loop_2.find_alignment_2()
+    # print(f"alignment_cost: {basic_loop_2.alignment_cost}")
+    # print(f"alignment_x: {basic_loop_2.x_alignment}")
+    # print(f"alignment_y: {basic_loop_2.y_alignment}")    
+    # print(f"=======================================================")
+    # basic_loop_3 = Seq_ali_basic(x, y)
+    # #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    # basic_loop_3.calculate_alignment_cost_loop(x, y)
+    # #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    # basic_loop_3.find_alignment_3()
+    # print(f"alignment_cost: {basic_loop_3.alignment_cost}")
+    # print(f"alignment_x: {basic_loop_3.x_alignment}")
+    # print(f"alignment_y: {basic_loop_3.y_alignment}")    
+    # print(f"=======================================================")
+    # basic_loop_4 = Seq_ali_basic(x, y)
+    # #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    # basic_loop_4.calculate_alignment_cost_loop(x, y)
+    # #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    # basic_loop_4.find_alignment_4()
+    # print(f"alignment_cost: {basic_loop_4.alignment_cost}")
+    # print(f"alignment_x: {basic_loop_4.x_alignment}")
+    # print(f"alignment_y: {basic_loop_4.y_alignment}")    
+    # print(f"=======================================================")
+    # basic_loop_5 = Seq_ali_basic(x, y)
+    # #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    # basic_loop_5.calculate_alignment_cost_loop(x, y)
+    # #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    # basic_loop_5.find_alignment_5()
+    # print(f"alignment_cost: {basic_loop_5.alignment_cost}")
+    # print(f"alignment_x: {basic_loop_5.x_alignment}")
+    # print(f"alignment_y: {basic_loop_5.y_alignment}")    
+    # print(f"=======================================================")
+    # basic_loop_6 = Seq_ali_basic(x, y)
+    # #print(f"2_alignment_cost_arr_before: {basic2.alignment_cost_arr}")
+    # basic_loop_6.calculate_alignment_cost_loop(x, y)
+    # #print(f"2_alignment_cost_arr_after: {basic2.alignment_cost_arr}")
+    # basic_loop_6.find_alignment_6()
+    # print(f"alignment_cost: {basic_loop_6.alignment_cost}")
+    # print(f"alignment_x: {basic_loop_6.x_alignment}")
+    # print(f"alignment_y: {basic_loop_6.y_alignment}")
+    # print(f"=======================================================")
