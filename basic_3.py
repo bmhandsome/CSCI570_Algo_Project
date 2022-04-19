@@ -354,8 +354,11 @@ class Seq_ali_basic:
 if __name__ == "__main__":
     x = CookingRaw(raw1)
     y = CookingRaw(raw2)
-    # x = "A"
-    # y = "C"
+    # x = "C"
+    # y = "CG"
+
+    # print(f"x: {x}")
+    # print(f"y: {y}")
 
     time_taken, basic = time_wrapper(x, y)
     memory = process_memory()
