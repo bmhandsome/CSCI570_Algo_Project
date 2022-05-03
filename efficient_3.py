@@ -75,12 +75,43 @@ class Seq_ali_eff:
         if (len(x) == 0 and not len(y) == 0): return len(y) * self.delta, "_" * len(y), y
         if (not len(x) == 0 and len(y) == 0): return len(x) * self.delta, x, "_" * len(x)
 
-        if (len(x) == 1 and len(y) ==1):
+        if (len(x) == 1 and len(y) == 1):
             alpha = self.alpha_value_dict[(x, y)]
             if alpha <= self.delta * 2:
                 return alpha, x, y
             else:
                 return self.delta * 2, "_" + x, y + "_"
+
+        if (len(x) == 1 and len(y) == 1):
+            alpha = self.alpha_value_dict[(x, y)]
+            if alpha <= self.delta * 2:
+                return alpha, x, y
+            else:
+                return self.delta * 2, "_" + x, y + "_"
+
+        if (len(x) == 2 and len(y) == 1):
+            if x[0] == y:
+                return self.delta, x, y + "_"
+            elif x[1] == y:
+                return self.delta, x, "_" + y
+            elif self.alpha_value_dict[(x[0], y)] < self.delta * 2:
+                return self.delta + self.alpha_value_dict[(x[0], y)], x, y + "_"
+            elif self.alpha_value_dict[(x[1], y)] < self.delta * 2:
+                return self.delta + self.alpha_value_dict[(x[1], y)], x, "_" + y
+            else:
+                return 3 * self.delta
+
+        if (len(x) == 1 and len(y) == 2):
+            if y[0] == x:
+                return self.delta, x + "_", y
+            elif y[1] == x:
+                return self.delta, "_" + x, y
+            elif self.alpha_value_dict[(y[0], x)] < self.delta * 2:
+                return self.delta + self.alpha_value_dict[(y[0], x)], x + "_", y
+            elif self.alpha_value_dict[(y[1], x)] < self.delta * 2:
+                return self.delta + self.alpha_value_dict[(y[1], x)], "_" + x, y
+            else:
+                return 3 * self.delta
 
         divide_index_x = int(len(x) / 2)
         x_left = x[:divide_index_x]
