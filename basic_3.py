@@ -352,10 +352,10 @@ class Seq_ali_basic:
 
 
 if __name__ == "__main__":
-    x = CookingRaw(raw1)
-    y = CookingRaw(raw2)
-    # x = "C"
-    # y = "CG"
+    # x = CookingRaw(raw1)
+    # y = CookingRaw(raw2)
+    x = "TC"
+    y = "CT"
 
     # print(f"x: {x}")
     # print(f"y: {y}")

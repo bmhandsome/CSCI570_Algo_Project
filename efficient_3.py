@@ -71,11 +71,12 @@ class Seq_ali_eff:
         self.alignment_cost = 0
 
     def divide_and_conquer(self, x, y, count):
+        print(f"x: {x} | y: {y} | count: {count}")
         if (len(x) == 0 and len(y) == 0): return 0, "", ""
         if (len(x) == 0 and not len(y) == 0): return len(y) * self.delta, "_" * len(y), y
         if (not len(x) == 0 and len(y) == 0): return len(x) * self.delta, x, "_" * len(x)
 
-        if (len(x) == 1 and len(y) ==1):
+        if (len(x) == 1 and len(y) == 1):
             alpha = self.alpha_value_dict[(x, y)]
             if alpha <= self.delta * 2:
                 return alpha, x, y
@@ -90,35 +91,44 @@ class Seq_ali_eff:
 
         alignment_cost_arr_left = [[0 for i in range(len(y) + 1)] for j in range(2)]
         for i in range(2):
-            alignment_cost_arr_left[i][0] = self.delta * i
+            #alignment_cost_arr_left[i][0] = self.delta * i
+            alignment_cost_arr_left[i][0] = 0
         for j in range(len(y) + 1):
             alignment_cost_arr_left[0][j] = self.delta * j
-
+        print(f'alignment_cost_arr_left: {alignment_cost_arr_left}')
         #finding alignment cost of x_left and y
         index_x_left = 1
         while index_x_left <= len(x_left):
+            alignment_cost_arr_left[1][0] = alignment_cost_arr_left[0][0] + self.delta
             for j in range(1, len(y) + 1):
+                print(f'j: {j}')
                 alpha = self.alpha_value_dict[(x_left[index_x_left-1],y[j-1])]
+                print(f'alpha: {alpha}')
+                print(f'x_left[index_x_left-1]: {x_left[index_x_left-1]}')
+                print(f'y[j-1]: {y[j-1]}')
 
                 alignment_cost_arr_left[1][j] = min(
                     (alpha + alignment_cost_arr_left[0][j - 1]),
                     (self.delta + alignment_cost_arr_left[0][j]),
                     (self.delta + alignment_cost_arr_left[1][j - 1])
                 )
+                print(f'alignment_cost_arr_left[1][j]: {alignment_cost_arr_left[1][j]}')
 
             index_x_left = index_x_left + 1
             alignment_cost_arr_left[0] = list(alignment_cost_arr_left[1])
-            alignment_cost_arr_left[1][0] = alignment_cost_arr_left[0][0] + self.delta
+            #alignment_cost_arr_left[1][0] = alignment_cost_arr_left[0][0] + self.delta
 
         alignment_cost_arr_right = [[0 for i in range(len(y_reverse) + 1)] for j in range(2)]
         for i in range(2): 
-            alignment_cost_arr_right[i][0] = self.delta * i
+            #alignment_cost_arr_right[i][0] = self.delta * i
+            alignment_cost_arr_right[i][0] = 0
         for j in range(len(y_reverse) + 1):
             alignment_cost_arr_right[0][j] = self.delta * j
 
         #finding alignment cost of x_right_reverse and y_reverse
         index_x_right_reverse = 1
         while index_x_right_reverse <= len(x_right):
+            alignment_cost_arr_right[1][0] = alignment_cost_arr_right[0][0] + self.delta
             for j in range(1, len(y_reverse) + 1):
                 alpha = self.alpha_value_dict[(x_right_reverse[index_x_right_reverse-1],y_reverse[j-1])]
                 alignment_cost_arr_right[1][j] = min(
@@ -129,21 +139,31 @@ class Seq_ali_eff:
 
             index_x_right_reverse = index_x_right_reverse + 1
             alignment_cost_arr_right[0] = list(alignment_cost_arr_right[1])
-            alignment_cost_arr_right[1][0] = alignment_cost_arr_right[0][0] + self.delta
+            #alignment_cost_arr_right[1][0] = alignment_cost_arr_right[0][0] + self.delta
 
         alignment_cost_arr_sum = [0 for i in range(len(y) + 1)]
 
         for i in range(len(alignment_cost_arr_sum)):
             alignment_cost_arr_sum[i] = alignment_cost_arr_left[1][i] + alignment_cost_arr_right[1][len(y_reverse) - i]
 
+        print(f'alignment_cost_arr_left: {alignment_cost_arr_left[1]}')
+        print(f'alignment_cost_arr_right: {alignment_cost_arr_right[1]}')
+        print(f'alignment_cost_arr_sum: {alignment_cost_arr_sum}')
+
         min_alignment_cost = min(alignment_cost_arr_sum)
+        print(f'min_alignment_cost: {min_alignment_cost}')
         index_min = alignment_cost_arr_sum.index(min_alignment_cost)
+        print(f'index_min: {index_min}')
 
         if divide_index_x == 0 and index_min == 0:
                 return self.delta * (len(y) - len(x)), x + "_", y
 
         y_left = y[:index_min]
         y_right = y[index_min:]
+        print(f'x_left: {x_left}')
+        print(f'x_right: {x_right}')
+        print(f'y_left: {y_left}')
+        print(f'y_right: {y_right}')
 
         result_left = self.divide_and_conquer(x_left, y_left, count + 1)
         result_right = self.divide_and_conquer(x_right, y_right, count + 1)
@@ -151,10 +171,10 @@ class Seq_ali_eff:
         return min_alignment_cost, result_left[1] + result_right[1], result_left[2] + result_right[2]
 
 if __name__ == "__main__":
-    x = CookingRaw(raw1)
-    y = CookingRaw(raw2)
-    # x = "C"
-    # y = "CG"
+    # x = CookingRaw(raw1)
+    # y = CookingRaw(raw2)
+    x = "TC"
+    y = "CT"
 
     time_taken, alignment_cost, x_alignment, y_alignment = time_wrapper(x, y)
     memory = process_memory()
