@@ -10,24 +10,25 @@ INPUT_FILE_PATH = arg1
 OUTPUT_FILE_PATH = arg2
 
 f = open(INPUT_FILE_PATH, "r")
-#f = open("../SampleTestCases/input1.txt", "r")
+# f = open("../SampleTestCases/input4.txt", "r")
 
 raw1 = []
 raw2 = []
 i = 0
 
 for x in f:
-    if i==0:
+    if i == 0:
         raw1.append(x.strip())
-        i+=1
-    elif i==1:
+        i += 1
+    elif i == 1:
         try:
             raw1.append(int(x.strip()))
         except:
             raw2.append(x.strip())
-            i+=1
+            i += 1
     else:
         raw2.append(int(x.strip()))
+
 
 def CookingRaw(raw):
     meal = raw[0]
@@ -36,24 +37,28 @@ def CookingRaw(raw):
 
     return meal
 
+
 def process_memory():
     process = psutil.Process()
     memory_info = process.memory_info()
-    memory_consumed = int(memory_info.rss/1024)
+    memory_consumed = int(memory_info.rss / 1024)
     return memory_consumed
+
 
 def time_wrapper(x, y):
     start_time = time.time()
     alignment_cost, x_alignment, y_alignment = call_algorithm(x, y)
     end_time = time.time()
-    time_taken = (end_time - start_time)*1000
+    time_taken = (end_time - start_time) * 1000
     return time_taken, alignment_cost, x_alignment, y_alignment
 
-def call_algorithm(x, y):
 
+def call_algorithm(x, y):
     efficient = Seq_ali_eff(x, y)
-    alignment_cost, x_alignment, y_alignment = efficient.divide_and_conquer(x, y, 0)
+    alignment_cost, x_alignment, y_alignment = efficient.divide_and_conquer(x, y)
+    # alignment_cost, x_alignment, y_alignment, cost_list = efficient.divide_and_conquer(x, y)
     return alignment_cost, x_alignment, y_alignment
+
 
 class Seq_ali_eff:
     def __init__(self, X, Y):
@@ -70,17 +75,10 @@ class Seq_ali_eff:
         self.y_alignment = ""
         self.alignment_cost = 0
 
-    def divide_and_conquer(self, x, y, count):
+    def divide_and_conquer(self, x, y):
         if (len(x) == 0 and len(y) == 0): return 0, "", ""
-        if (len(x) == 0 and not len(y) == 0): return len(y) * self.delta, "_" * len(y), y
+        if (len(x) == 0 and len(y) != 0): return len(y) * self.delta, "_" * len(y), y
         if (not len(x) == 0 and len(y) == 0): return len(x) * self.delta, x, "_" * len(x)
-
-        if (len(x) == 1 and len(y) == 1):
-            alpha = self.alpha_value_dict[(x, y)]
-            if alpha <= self.delta * 2:
-                return alpha, x, y
-            else:
-                return self.delta * 2, "_" + x, y + "_"
 
         if (len(x) == 1 and len(y) == 1):
             alpha = self.alpha_value_dict[(x, y)]
@@ -113,73 +111,87 @@ class Seq_ali_eff:
             else:
                 return 3 * self.delta, "__" + x, y + "_"
 
+        if (len(x) == 1 and len(y) > 2):
+            j = 0
+            while j < len(y):
+                if x == y[j]:
+                    return (len(y) - 1) * self.delta, '_' * j + x + '_' * (len(y) - j - 1), y
+                else:
+                    j += 1
+            j = 0
+            while j < len(y):
+                if self.alpha_value_dict[(x, y[j])] < self.delta * 2:
+                    return (len(y) - 1) * self.delta + self.alpha_value_dict[(x, y[j])], '_' * j + x + '_' * (
+                                len(y) - j - 1), y
+                else:
+                    j += 1
+
         divide_index_x = int(len(x) / 2)
         x_left = x[:divide_index_x]
         x_right = x[divide_index_x:]
         x_right_reverse = x_right[::-1]
         y_reverse = y[::-1]
 
-        alignment_cost_arr_left = [[0 for i in range(len(y) + 1)] for j in range(2)]
+        #####################################################################################
+
+        alignment_cost_arr_left = [[-1 for j in range(len(y) + 1)] for i in range(2)]
         for i in range(2):
             alignment_cost_arr_left[i][0] = self.delta * i
         for j in range(len(y) + 1):
             alignment_cost_arr_left[0][j] = self.delta * j
 
-        #finding alignment cost of x_left and y
-        index_x_left = 1
-        while index_x_left <= len(x_left):
+        for i in range(1, divide_index_x + 1):
             for j in range(1, len(y) + 1):
-                alpha = self.alpha_value_dict[(x_left[index_x_left-1],y[j-1])]
-
+                alpha = self.alpha_value_dict[(x_left[i - 1], y[j - 1])]
                 alignment_cost_arr_left[1][j] = min(
                     (alpha + alignment_cost_arr_left[0][j - 1]),
                     (self.delta + alignment_cost_arr_left[0][j]),
                     (self.delta + alignment_cost_arr_left[1][j - 1])
                 )
+            if i != divide_index_x:
+                alignment_cost_arr_left[0] = list(alignment_cost_arr_left[1])
+                alignment_cost_arr_left[1][0] = alignment_cost_arr_left[0][0] + self.delta
 
-            index_x_left = index_x_left + 1
-            alignment_cost_arr_left[0] = list(alignment_cost_arr_left[1])
-            alignment_cost_arr_left[1][0] = alignment_cost_arr_left[0][0] + self.delta
+        #####################################################################################
 
-        alignment_cost_arr_right = [[0 for i in range(len(y_reverse) + 1)] for j in range(2)]
+        alignment_cost_arr_right = [[-1 for j in range(len(y_reverse) + 1)] for i in range(2)]
         for i in range(2):
             alignment_cost_arr_right[i][0] = self.delta * i
         for j in range(len(y_reverse) + 1):
             alignment_cost_arr_right[0][j] = self.delta * j
 
-        #finding alignment cost of x_right_reverse and y_reverse
-        index_x_right_reverse = 1
-        while index_x_right_reverse <= len(x_right):
+        for i in range(1, len(x) - divide_index_x + 1):
             for j in range(1, len(y_reverse) + 1):
-                alpha = self.alpha_value_dict[(x_right_reverse[index_x_right_reverse-1],y_reverse[j-1])]
+                alpha = self.alpha_value_dict[(x_right_reverse[i - 1], y_reverse[j - 1])]
                 alignment_cost_arr_right[1][j] = min(
-                    (alpha + alignment_cost_arr_right[0][j -1]),
+                    (alpha + alignment_cost_arr_right[0][j - 1]),
                     (self.delta + alignment_cost_arr_right[0][j]),
                     (self.delta + alignment_cost_arr_right[1][j - 1])
                 )
+            if i != len(x) - divide_index_x:
+                alignment_cost_arr_right[0] = list(alignment_cost_arr_right[1])
+                alignment_cost_arr_right[1][0] = alignment_cost_arr_right[0][0] + self.delta
 
-            index_x_right_reverse = index_x_right_reverse + 1
-            alignment_cost_arr_right[0] = list(alignment_cost_arr_right[1])
-            alignment_cost_arr_right[1][0] = alignment_cost_arr_right[0][0] + self.delta
+        #####################################################################################
 
-        alignment_cost_arr_sum = [0 for i in range(len(y) + 1)]
+        alignment_cost_arr_sum = [-1 for j in range(len(y) + 1)]
 
-        for i in range(len(alignment_cost_arr_sum)):
-            alignment_cost_arr_sum[i] = alignment_cost_arr_left[1][i] + alignment_cost_arr_right[1][len(y_reverse) - i]
+        for i in range(len(y) + 1):
+            alignment_cost_arr_sum[i] = alignment_cost_arr_left[1][i] + alignment_cost_arr_right[1][len(y) - i]
 
         min_alignment_cost = min(alignment_cost_arr_sum)
         index_min = alignment_cost_arr_sum.index(min_alignment_cost)
 
-        if divide_index_x == 0 and index_min == 0:
-                return self.delta * (len(y) - len(x)), x + "_", y
+        #####################################################################################
 
         y_left = y[:index_min]
         y_right = y[index_min:]
 
-        result_left = self.divide_and_conquer(x_left, y_left, count + 1)
-        result_right = self.divide_and_conquer(x_right, y_right, count + 1)
+        result_left = self.divide_and_conquer(x_left, y_left)
+        result_right = self.divide_and_conquer(x_right, y_right)
 
         return min_alignment_cost, result_left[1] + result_right[1], result_left[2] + result_right[2]
+        # return min_alignment_cost, result_left[1] + result_right[1], result_left[2] + result_right[2], y_left
 
 if __name__ == "__main__":
     x = CookingRaw(raw1)
